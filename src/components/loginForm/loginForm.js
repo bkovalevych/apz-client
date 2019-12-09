@@ -1,7 +1,10 @@
 import divWithClassName from "react-bootstrap/esm/divWithClassName";
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Route, Link, Switch, BrowserRouter as Router, withRouter} from 'react-router-dom'
 import strings from '../../res/localisation'
+import {login, register} from '../../functions/userFunctions'
+import jwt from 'jwt-decode';
+import Alert from "react-bootstrap/Alert";
 
 class LoginForm extends React.Component {
     constructor(props) {
@@ -11,24 +14,75 @@ class LoginForm extends React.Component {
             email: '',
             _id: '',
             count_followers: 0,
-            login: true
+            login: true,
+            password: '',
+            pending: false,
+            regName: '',
+            regEmail: '',
+            regPassword: '',
+            errorsReg: '',
+            registered: ''
         };
         this.showLogin = this.showLogin.bind(this);
         this.showReg = this.showReg.bind(this);
+        this.login = login.bind(this);
+        this.register = register.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.onSubmitLogin = this.onSubmitLogin.bind(this);
+        this.onSubmitReg = this.onSubmitReg.bind(this);
     }
+
     showLogin(e) {
         e.preventDefault();
         this.setState({login: true})
     }
 
+    onSubmitLogin(e) {
+        e.preventDefault();
+        this.setState({pending: true, errors: null});
+        this.login(this.state.email, this.state.password).then(data => {
+            if(data.errors) {
+                this.setState({errors: data.errors.toString(), pending: false});
+                return;
+            }
+            this.props.setUser(jwt(data.data));
+            this.setState({pending: false});
+            this.props.history.push('profile');
+        });
+
+    }
+
+    onSubmitReg(e) {
+        e.preventDefault();
+        this.setState({pending: true, errorsReg: null, registered: null});
+        this.register(this.state.regEmail, this.state.regName, this.state.regPassword).then(data => {
+            if (data.errors) {
+                this.setState({errorsReg: data.errors.toString(), pending: false, registered: null});
+                return;
+            }
+            this.setState({pending: false, registered: data.data});
+        })
+    }
+
+
+
     showReg(e) {
-        e.preventDefault()
+        e.preventDefault();
         this.setState({login: false})
     }
 
-    render() {
+    onChange(e) {
+        let param = {};
+        param[e.target.name] = e.target.value;
+        this.setState(param)
+    }
 
+    render() {
+        let errors = this.state.errors? <Alert variant={"danger"}>{this.state.errors}</Alert>: "";
+        let errorsReg = this.state.errorsReg? <Alert variant={"danger"}>{this.state.errorsReg}</Alert>: "";
+        let reg = this.state.registered? <Alert variant={"info"}>{this.state.registered}</Alert>: "";
         return (
+            this.state.pending? <p>Waiting</p> :
             <div>
                 <div className="container">
                     <div className="row">
@@ -40,17 +94,35 @@ class LoginForm extends React.Component {
                                             <h1>{this.props.strings.menuLogin}</h1>
                                         </div>
                                     </div>
-                                    <form action="" method="post" name="login">
+                                    <form onSubmit={this.onSubmitLogin}>
                                         <div className="form-group">
                                             <label >Email</label>
-                                            <input type="email" name="email"  className="form-control" id="email" aria-describedby="emailHelp" placeholder="email"/>
+                                            <input type="email"
+                                                   name="email"
+                                                   className="form-control"
+                                                   id="email"
+                                                   aria-describedby="emailHelp"
+                                                   placeholder="email"
+                                                   onChange={this.onChange}
+                                                   value={this.state.email}
+                                            />
                                         </div>
                                         <div className="form-group">
                                             <label >{this.props.strings.password}</label>
-                                            <input type="password" name="password" id="password"  className="form-control" aria-describedby="emailHelp" placeholder="Password"/>
+                                            <input type="password"
+                                                   name="password"
+                                                   id="password"
+                                                   className="form-control"
+                                                   aria-describedby="emailHelp"
+                                                   placeholder="Password"
+                                                   onChange={this.onChange}
+                                                   value={this.state.password}
+                                            />
                                         </div>
                                         <div className="col-md-12 text-center ">
-                                            <button type="submit" className=" btn btn-block mybtn btn-primary tx-tfm">{this.props.strings.menuLogin}</button>
+                                            <button type={'submit'}
+                                                    className=" btn btn-block mybtn btn-primary tx-tfm"
+                                            >{this.props.strings.menuLogin}</button>
                                         </div>
                                         <div className="form-group">
                                             <p className="text-center">
@@ -59,7 +131,7 @@ class LoginForm extends React.Component {
                                             </p>
                                         </div>
                                     </form>
-
+                                    {errors}
                                 </div>
                             </div>
                             <div id="second" style={{display: !this.state.login? "block": "none"}}>
@@ -69,22 +141,42 @@ class LoginForm extends React.Component {
                                             <h1 >{this.props.strings.signUp}</h1>
                                         </div>
                                     </div>
-                                    <form action="#" name="registration">
+                                    <form onSubmit={this.onSubmitReg}>
                                         <div className="form-group">
-                                            <label>{this.props.strings.firstName}</label>
-                                            <input type="text"  name="firstname" className="form-control" id="firstname" aria-describedby="emailHelp" placeholder={this.props.strings.firstName}/>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>{this.props.strings.lastName}</label>
-                                            <input type="text"  name="lastname" className="form-control" id="lastname" aria-describedby="emailHelp" placeholder={this.props.strings.lastName}/>
+                                            <label>Nickname</label>
+                                            <input type="text"
+                                                   name="regName"
+                                                   className="form-control"
+                                                   id="firstname"
+                                                   aria-describedby="emailHelp"
+                                                   placeholder="Nickname"
+                                                   onChange={this.onChange}
+                                                   value={this.state.regName}
+                                            />
                                         </div>
                                         <div className="form-group">
                                             <label>Email</label>
-                                            <input type="email" name="email"  className="form-control" id="email" aria-describedby="emailHelp" placeholder="email"/>
+                                            <input type="email"
+                                                   name="regEmail"
+                                                   className="form-control"
+                                                   id="email"
+                                                   aria-describedby="emailHelp"
+                                                   placeholder="email"
+                                                   onChange={this.onChange}
+                                                   value={this.state.regEmail}
+                                            />
                                         </div>
                                         <div className="form-group">
                                             <label >{this.props.strings.password}</label>
-                                            <input type="password" name="password" id="password"  className="form-control" aria-describedby="emailHelp" placeholder={this.props.strings.password}/>
+                                            <input type="password"
+                                                   name="regPassword"
+                                                   id="password"
+                                                   className="form-control"
+                                                   aria-describedby="emailHelp"
+                                                   placeholder={this.props.strings.password}
+                                                   onChange={this.onChange}
+                                                   value={this.state.regPassword}
+                                            />
                                         </div>
                                         <div className="col-md-12 text-center mb-3">
                                             <button type="submit" className=" btn btn-block mybtn btn-primary tx-tfm">{this.props.strings.signUp}</button>
@@ -95,6 +187,8 @@ class LoginForm extends React.Component {
                                             </div>
                                         </div>
                                     </form>
+                                    {errorsReg}
+                                    {reg}
                                 </div>
                             </div>
                         </div>

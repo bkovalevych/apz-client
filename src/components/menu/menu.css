@@ -9,6 +9,12 @@
     cursor: pointer;
 }
 
+.nick {
+    margin: 5px 20px 20px 20px;
+
+    color: rgba(34, 175, 24, 0.74)
+}
+
 .main {
    padding-top: 100px;
     background-color: blueviolet;

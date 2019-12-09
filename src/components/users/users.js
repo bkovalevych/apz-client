@@ -1,37 +1,13 @@
-import * as React from 'react';
-import {Button, Link} from 'uikit-react';
-
-
+import React, {useState, useEffect} from 'react';
+import {VelocityComponent} from 'velocity-react'
 import strings from '../../res/localisation'
 
 
+export default function(props) {
+    let rs = props.strings;
+    const [users, getUsers] = useState(null);
 
-class Users extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {label: 0, language: 'en'};
-        this.handleLanguageChange = this.handleLanguageChange.bind(this);
+    const oneUser = (prop) => {
+
     }
-
-
-
-    handleLanguageChange(e) {
-        e.preventDefault();
-        let lang = e.target.value;
-        this.setState(prevState => ({
-            language: lang
-        }));
-        console.log('changed');
-    }
-
-    render() {
-        strings.setLanguage(this.state.language);
-        return (
-            <h1>{strings.menuUsers}</h1>
-        )
-    }
-}
-
-
-
-export default Users;
+};
