@@ -1,0 +1,67 @@
+.filter_box {
+
+    display: grid;
+
+    left: 5px;
+    top: 10px;
+    perspective: 230px;
+    transform-style: preserve-3d;
+    perspective-origin: right top;
+    grid-gap: 10px;
+}
+
+@media screen and (min-width: 900px) {
+    .filter_box {
+        position: fixed;
+        grid-template-areas:
+                "srch btn"
+                "dop dop";
+        grid-template-columns: repeat(auto-fill, min-content);
+    }
+    .searchBar {
+        grid-area: srch;
+        float: right;
+    }
+    .additional_filter {
+        grid-area: dop;
+        align-self: stretch;
+    }
+}
+
+
+@media screen and (max-width: 900px) {
+    .filter_box {
+        position: absolute;
+        grid-template-areas: "btn" "srch" "dop";
+    }
+}
+
+.button_filter {
+    grid-area: btn;
+    border-radius: 10px;
+    color: #e6e6e6;
+    background-color: #3c3c3c;
+    border: 2px solid #8e8e8e;
+    padding: 5px 10px 5px 10px;
+    transition: background-color 0.3s;
+    text-decoration: none;
+}
+
+
+.button_filter:hover {
+    background-color: #1e1e1e;
+}
+
+.additional_filter {
+    padding: 20px;
+    background: #434b5e;
+    color: #e1fdff;
+    grid-area: dop;
+}
+
+.searchBar {
+    border-radius: 10px;
+    grid-area: srch;
+    padding: 0 20px 0 20px;
+    height: 50px;
+}

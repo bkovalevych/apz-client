@@ -1,0 +1,47 @@
+.userBox {
+    display: grid;
+    grid-template-areas:  'ava name name btn'
+                    'ava fol subs btn';
+    grid-row-gap: 5px;
+    grid-template-rows: 2fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    background: rgba(74, 30, 127, 0.64);
+    align-items: center;
+}
+
+.allUsers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-column-gap: 20px;
+    grid-row-gap: 10px;
+    align-content: center;
+}
+
+.clickFollow {
+    grid-area: btn;
+    align-self: center;
+}
+
+.profilePhoto {
+    grid-area: ava;
+    align-self: center;
+}
+
+.profilePhoto:hover {
+    background: rgba(3, 3, 6, 0.66);
+
+}
+
+.numberSubscribes {
+    grid-area: subs;
+}
+
+.numberFollowers {
+    grid-area: fol;
+}
+
+
+.nickname {
+    grid-area: name;
+}
+

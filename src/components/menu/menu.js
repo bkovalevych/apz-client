@@ -7,17 +7,19 @@ import '../../../node_modules/font-awesome/css/font-awesome.min.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {logout as backLogOut} from '../../functions/userFunctions'
 
-import { Nav, NavDropdown } from 'react-bootstrap';
-import {Button} from 'uikit-react'
+import { Nav, NavDropdown, Button } from 'react-bootstrap';
+
 
 
 class Main extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {label: 0, language: 'en', path: "/main"};
+        this.state = {label: 0, language: 'en', path: "/main", anim: 'on'};
         this.handleLanguageChange = this.handleLanguageChange.bind(this);
         this.goToLink = this.goToLink.bind(this);
         this.logout = this.logout.bind(this);
+        this.handleAnimationChange = this.handleAnimationChange.bind(this);
+
     }
 
     goToLink(val) {
@@ -31,6 +33,18 @@ class Main extends React.Component {
         localStorage.setItem('language', lang);
     }
 
+    handleAnimationChange(e) {
+        e.preventDefault();
+
+        let anim = e.target.value;
+        this.setState({anim: anim});
+        if (anim === 'on') {
+            document.getElementsByClassName('dark')[0].children[0].style.display = 'block';
+        } else {
+            document.getElementsByClassName('dark')[0].children[0].style.display = 'none';
+        }
+    }
+
     logout() {
         localStorage.setItem('userToken', '');
         backLogOut(this.props.user.session).then();
@@ -39,7 +53,7 @@ class Main extends React.Component {
 
     render() {
         strings.setLanguage(this.props.language);
-        let logOut = this.props.user? <Button onClick={this.logout}> Log out</Button>: <Nav.Link eventKey="/login">{strings.menuLogin}</Nav.Link>;
+        let logOut = this.props.user? <Button onClick={this.logout}>{strings.menuLogout}</Button>: <Nav.Link eventKey="/login">{strings.menuLogin}</Nav.Link>;
         let nick = this.props.user? <Nav.Item className='nick'><div >{this.props.user.nickname}</div></Nav.Item>: '';
         return (
             <>
@@ -70,7 +84,9 @@ class Main extends React.Component {
                         </Nav.Link>
                     </Nav.Item>
 
-                    <NavDropdown title="People" id="nav-dropdown">
+
+                    <NavDropdown title={<i className="fa fa-users fa-2x"/>} id="nav-dropdown">
+
                         <NavDropdown.Item eventKey="/users">{strings.menuUsers}</NavDropdown.Item>
                         <NavDropdown.Item eventKey="/groups">{strings.menuGroups}</NavDropdown.Item>
                     </NavDropdown>
@@ -80,9 +96,17 @@ class Main extends React.Component {
                             {logOut}
                         </Nav.Item>
                         <Nav.Item style={{marginRight: "20px"}}>
+                            {strings.language}
                             <select onChange={this.handleLanguageChange} value={this.props.language}>
                                 <option value="en">En</option>
                                 <option value="ua">Ua</option>
+                            </select>
+                        </Nav.Item>
+                        <Nav.Item style={{marginRight: "20px"}}>
+                            {strings.animation}
+                            <select onChange={this.handleAnimationChange} value={this.state.anim}>
+                                <option value="on">On</option>
+                                <option value="off">Off</option>
                             </select>
                         </Nav.Item>
 

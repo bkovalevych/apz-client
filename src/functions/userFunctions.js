@@ -14,6 +14,15 @@ export const login = (email, password) => {
    })
 };
 
+export const getUsers = () => {
+    return axios.
+        post('/users', {}).then(res => {
+            return res.data;
+    }).catch(err => {
+        return {errors: err};
+    })
+};
+
 export const logout = (id) => {
     return axios.post('users/logout', {'idSession': id}).
     then(res => {

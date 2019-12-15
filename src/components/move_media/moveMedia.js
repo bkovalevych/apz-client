@@ -1,28 +1,32 @@
 import React, {useState, useEffect} from 'react';
-import {getMedia} from '../../functions/moveMedia'
-import {Card, CardColumns} from 'react-bootstrap'
+import {getMedia} from '../../functions/moveMedia';
+import './moveMedia.css'
+import {Card, CardColumns, Button, Tabs, Tab} from 'react-bootstrap'
+import Nav from "react-bootstrap/Nav";
+import Row from "react-bootstrap/Row";
+import Alert from "react-bootstrap/Alert";
+import Col from "react-bootstrap/Col";
+
 
 export default function(props) {
     let [data, getData] = useState(null);
+    const [tabsKey, setTabs] = useState(' ');
 
-    useEffect(() => {
 
-        getMedia().then(media => {
-          getData(media);
-        })
-    }, [data]);
+
+
 
     const renderMedia = (arr) => {
         let result = [];
         for(let key in arr) {
             let elem = arr[key];
             result.push(
-                <Card id={elem._id}>
+                <Card id={elem._id.toString()}>
                     <Card.Header>
                         {elem.name}
                     </Card.Header>
                     <Card.Subtitle>
-                        {elem.author.toString()}
+                        {props.users[elem.author.toString()].nickname}
                     </Card.Subtitle>
                     <Card.Body>
                         {elem.description}
@@ -42,10 +46,14 @@ export default function(props) {
         (data === false)?
             <p>Waiting</p> :
             renderMedia(data);
+            if (!data)
+                getMedia().then(media => {
+                    getData(media);
+                });
     return (
         <>
            <h3>{props.strings.menuMoveMedia}</h3>
-            <i className="fa fa-filter fa-2x"/>
+            <Button><i className='fa fa-plus'/></Button>
             <CardColumns>
                 {represent}
             </CardColumns>

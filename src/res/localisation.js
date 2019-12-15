@@ -10,15 +10,28 @@ import LocalizedStrings from 'react-localization';
      menuUsers: "Users",
      menuGroups: "Groups",
      menuLogin: "Login",
+     menuLogout: "Logout",
 
      password: 'password',
      signUp: "Sign up",
      dontHaveAcc: "Dont have account",
      firstName: "First Name",
      lastName: "LastName",
-     alreadyHaveAcc: "Already have an account?"
+     alreadyHaveAcc: "Already have an account?",
+
+     animation: "animation",
+     language: "language",
+     subscribe: "subscribe",
+     unsubscribe: "unsubscribe",
+
+
+     popular: "Popular",
+     fresh: "Fresh",
+     tags: "Tags"
+
  },
  ua: {
+     menuLogout: "Вийти",
      menuLogin: "Зайти",
      menuMain: "Головна",
      menuHome: "Домашня сторінка",
@@ -33,7 +46,16 @@ import LocalizedStrings from 'react-localization';
      dontHaveAcc: "Не маєте профілю",
      firstName: "Ім'я",
      lastName: "Прізвище",
-     alreadyHaveAcc: "Вже маєте профіль?"
+     alreadyHaveAcc: "Вже маєте профіль?",
+
+     animation: "Анімація",
+     language: "Мова",
+     subscribe: "Підписатись",
+     unsubscribe: "Відписатись",
+
+     popular: "Популярне",
+     fresh: "Свіже",
+     tags: "Теги"
  }
 });
 

@@ -5,6 +5,7 @@ import strings from '../../res/localisation'
 import {login, register} from '../../functions/userFunctions'
 import jwt from 'jwt-decode';
 import Alert from "react-bootstrap/Alert";
+import './loginForm.css'
 
 class LoginForm extends React.Component {
     constructor(props) {
